@@ -1,19 +1,24 @@
 <template>
   <div>
-    <p>Test!</p>
     <p>{{ testData }}</p>
+    <Charts></Charts>
   </div>
 </template>
 
 <script>
+import Charts from '../components/Charts'
 export default {
-  name: "Test.vue",
+  name: 'Test.vue',
+  components: { Charts },
+  comments: {
+    Charts
+  },
   data() {
     return {
-      testData: "test data!"
-    };
+      testData: 'test data!'
+    }
   }
-};
+}
 </script>
 
 <style scoped></style>
