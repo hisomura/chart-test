@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+*.jpg -text
+*.png -text
+*.gif -text
+*.ico -text
+*.ttf -text
