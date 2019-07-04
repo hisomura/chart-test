@@ -4,6 +4,7 @@
       <LineChart :chart-data="dataCollection"></LineChart>
     </div>
     <button @click="fillData()">Randomize</button>
+    <button @click="goRight()">goRight</button>
   </div>
 </template>
 
@@ -17,32 +18,42 @@ export default {
   },
   data() {
     return {
-      dataCollection: null
+      totalLabels: [],
+      totalData: [],
+      offset: 0,
+      plotNum: 100
+    }
+  },
+  computed: {
+    dataCollection() {
+      return {
+        labels: this.totalLabels.slice(this.offset, this.offset + this.plotNum),
+        datasets: [
+          {
+            label: 'Data One',
+            backgroundColor: '#f87979',
+            data: this.totalData.slice(this.offset, this.offset + this.plotNum)
+          }
+        ]
+      }
     }
   },
   mounted() {
     this.fillData()
   },
   methods: {
+    goRight() {
+      this.offset += 50;
+    },
     fillData() {
       const dataLength = 300
-      const labels = Array.from({ length: dataLength }, (v, i) => {
+      this.totalLabels = Array.from({ length: dataLength }, (v, i) => {
         return addDays(new Date(), i)
       })
-      const data = Array.from({ length: dataLength }, (v, i) => {
+      this.totalData = Array.from({ length: dataLength }, (v, i) => {
         return getRandomInt()
       })
-
-      this.dataCollection = {
-        labels: labels.slice(100, 200),
-        datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            data: data.slice(100, 200)
-          }
-        ]
-      }
+      this.offset = 100
     }
   }
 }
