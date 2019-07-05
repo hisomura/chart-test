@@ -10,7 +10,7 @@
 
 <script>
 import LineChart from './chart/LineChart.vue'
-import { addDays } from 'date-fns'
+import { addDays, addHours } from 'date-fns'
 const getRandomInt = () => Math.floor(Math.random() * (50 - 5 + 1)) + 5
 export default {
   components: {
@@ -20,7 +20,7 @@ export default {
     return {
       totalLabels: [],
       totalData: [],
-      offset: 0,
+      offset: 100,
       plotNum: 100
     }
   },
@@ -32,7 +32,7 @@ export default {
           {
             label: 'Data One',
             backgroundColor: '#f87979',
-            data: this.totalData.slice(this.offset, this.offset + this.plotNum)
+            data: this.totalData
           }
         ]
       }
@@ -43,15 +43,19 @@ export default {
   },
   methods: {
     goRight() {
-      this.offset += 50;
+      this.offset += 50
     },
     fillData() {
-      const dataLength = 300
-      this.totalLabels = Array.from({ length: dataLength }, (v, i) => {
+      const dateLength = 300
+      this.totalLabels = Array.from({ length: dateLength }, (v, i) => {
         return addDays(new Date(), i)
       })
-      this.totalData = Array.from({ length: dataLength }, (v, i) => {
-        return getRandomInt()
+      const startDate = addDays(new Date(), 100)
+      this.totalData = Array.from({ length: 400 }, (v, i) => {
+        return {
+          x: addHours(addDays(startDate, i / 4), (i % 4) * 6),
+          y: getRandomInt()
+        }
       })
       this.offset = 100
     }
