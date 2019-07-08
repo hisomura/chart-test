@@ -4,10 +4,28 @@ import { Line, mixins } from 'vue-chartjs'
 export default {
   extends: Line,
   mixins: [mixins.reactiveProp],
-  // props: ["options"],
-  data() {
-    return {
-      options: {
+  props: {
+    min: {
+      type: Date,
+      required: true
+    },
+    max: {
+      type: Date,
+      required: true
+    }
+  },
+  computed: {},
+  watch: {
+    min(newVal, oldVal) {
+      this.renderChart(this.chartData, this.options())
+    },
+    max(newVal, oldVal) {
+      this.renderChart(this.chartData, this.options())
+    }
+  },
+  methods: {
+    options() {
+      return {
         responsive: true,
         animation: false,
         maintainAspectRatio: false,
@@ -17,7 +35,12 @@ export default {
           xAxes: [
             {
               type: 'time',
-              display: true
+              distribution: 'linear',
+              display: true,
+              time: {
+                max: this.max,
+                min: this.min
+              }
             }
           ],
           yAxes: [
@@ -33,7 +56,7 @@ export default {
     }
   },
   mounted() {
-    this.renderChart(this.chartData, this.options)
+    this.renderChart(this.chartData, this.options())
   }
 }
 </script>

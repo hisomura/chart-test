@@ -1,8 +1,9 @@
 <template>
   <div class="small">
     <div class="chart-wrapper">
-      <LineChart :chart-data="dataCollection"></LineChart>
+      <LineChart :chart-data="dataCollection" :min="min" :max="max"></LineChart>
     </div>
+    <button @click="goLeft()">goLeft</button>
     <button @click="fillData()">Randomize</button>
     <button @click="goRight()">goRight</button>
   </div>
@@ -12,6 +13,12 @@
 import LineChart from './chart/LineChart.vue'
 import { addDays, addHours } from 'date-fns'
 const getRandomInt = () => Math.floor(Math.random() * (50 - 5 + 1)) + 5
+const sliceAndFill = (arr, offset, size) => {
+  const emptySize = size - (arr.length - arr.length)
+  return arr
+    .slice(offset, offset + size)
+    .concat(Array.from({ length: emptySize }))
+}
 export default {
   components: {
     LineChart
@@ -20,14 +27,16 @@ export default {
     return {
       totalLabels: [],
       totalData: [],
-      offset: 100,
-      plotNum: 100
+      offset: 0,
+      plotNum: 100,
+      min: addDays(new Date(), -500),
+      max: addDays(new Date(), 500)
     }
   },
   computed: {
     dataCollection() {
       return {
-        labels: this.totalLabels.slice(this.offset, this.offset + this.plotNum),
+        labels: this.totalLabels,
         datasets: [
           {
             label: 'Data One',
@@ -42,22 +51,19 @@ export default {
     this.fillData()
   },
   methods: {
+    goLeft() {
+      this.min = addDays(this.min, -50)
+      this.max = addDays(this.max, -50)
+    },
     goRight() {
-      this.offset += 50
+      this.min = addDays(this.min, 50)
+      this.max = addDays(this.max, 50)
     },
     fillData() {
-      const dateLength = 300
-      this.totalLabels = Array.from({ length: dateLength }, (v, i) => {
-        return addDays(new Date(), i)
+      this.totalLabels = Array.from({ length: 1000 }, (v, i) => {
+        return addDays(new Date(), i - 500)
       })
-      const startDate = addDays(new Date(), 100)
-      this.totalData = Array.from({ length: 400 }, (v, i) => {
-        return {
-          x: addHours(addDays(startDate, i / 4), (i % 4) * 6),
-          y: getRandomInt()
-        }
-      })
-      this.offset = 100
+      this.totalData = Array.from({ length: 1000 }, () => getRandomInt())
     }
   }
 }
