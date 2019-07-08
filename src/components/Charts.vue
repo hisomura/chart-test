@@ -1,7 +1,11 @@
 <template>
   <div class="small">
     <div class="chart-wrapper">
-      <LineChart :chart-data="dataCollection" :min="min" :max="max"></LineChart>
+      <LineChart
+        :chart-data="dataCollection"
+        :initMin="min"
+        :initMax="max"
+      ></LineChart>
     </div>
     <button @click="goLeft()">goLeft</button>
     <button @click="fillData()">Randomize</button>
