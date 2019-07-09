@@ -89,6 +89,7 @@ export default {
   mounted() {
     const self = this
     let prevX = undefined
+    let lastUpdate = undefined
     this.renderChart(this.chartData, this.options())
     this.$refs.canvas.addEventListener(
       'dragstart',
@@ -97,18 +98,21 @@ export default {
         // https://stackoverflow.com/questions/7680285/how-do-you-turn-off-setdragimage
         event.dataTransfer.setDragImage(self.$refs.dragImg, 0, 0)
         prevX = event.offsetX
+        lastUpdate = Date.now()
       },
       false
     )
     this.$refs.canvas.addEventListener(
       'dragover',
       function(event) {
-        if (event.pageX % 10 === 0) {
+        if (Date.now() - lastUpdate > 50) {
           const diff = event.pageX - prevX
           prevX = event.pageX
           self.min = addDays(self.min, -diff)
           self.max = addDays(self.max, -diff)
-          self.renderChart(self.chartData, self.options())
+          self.$data._chart.options = self.options()
+          self.$data._chart.update()
+          lastUpdate = Date.now()
         }
       },
       false
