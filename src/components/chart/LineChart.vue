@@ -106,13 +106,13 @@ export default {
       'dragover',
       function(event) {
         if (Date.now() - lastUpdate > 50) {
+          lastUpdate = Date.now()
           const diff = event.pageX - prevX
           prevX = event.pageX
           self.min = addDays(self.min, -diff)
           self.max = addDays(self.max, -diff)
           self.$data._chart.options = self.options()
           self.$data._chart.update()
-          lastUpdate = Date.now()
         }
       },
       false
